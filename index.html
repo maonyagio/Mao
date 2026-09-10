@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maonime — nonton anime sub indo</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8C%99%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.13/hls.min.js" defer></script>
+<style>
+  :root{
+    --bg:#0c0e11;
+    --bg-elev:#131619;
+    --surface:#171b1f;
+    --surface-2:#1d2227;
+    --border:#262b31;
+    --text:#eceeef;
+    --text-muted:#8b929b;
+    --text-faint:#565c64;
+    --accent:#e3b341;
+    --accent-dim:#e3b34122;
+    --ongoing:#4fbf8b;
+    --danger:#e0654f;
+    --radius:3px;
+    --font-display:'Bricolage Grotesque',sans-serif;
+    --font-body:'Inter',sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--font-body);
+    font-size:15px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--accent);color:#0c0e11;}
+  a{color:inherit;text-decoration:none;}
+  button{font-family:inherit;cursor:pointer;}
+  img{max-width:100%;display:block;}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+  ::-webkit-scrollbar{width:10px;height:10px;}
+  ::-webkit-scrollbar-track{background:var(--bg);}
+  ::-webkit-scrollbar-thumb{background:var(--surface-2);border-radius:8px;}
+
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px;}
+
+  /* header */
+  header.site{
+    position:sticky;top:0;z-index:40;
+    background:rgba(12,14,17,.86);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+  }
+  .header-row{display:flex;align-items:center;gap:28px;height:64px;}
+  .logo{font-family:var(--font-display);font-weight:600;font-size:22px;letter-spacing:-.01em;display:flex;align-items:baseline;gap:2px;flex-shrink:0;}
+  .logo span.dot{color:var(--accent);}
+  nav.main-nav{display:flex;gap:22px;flex:1;}
+  nav.main-nav a{font-size:14px;color:var(--text-muted);padding:6px 0;border-bottom:2px solid transparent;transition:color .15s;white-space:nowrap;}
+  nav.main-nav a:hover{color:var(--text);}
+  nav.main-nav a.active{color:var(--text);border-bottom-color:var(--accent);}
+  .search-form{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:0 10px;height:38px;min-width:0;flex-shrink:1;width:220px;transition:border-color .15s,width .2s;}
+  .search-form:focus-within{border-color:var(--accent);width:280px;}
+  .search-form input{background:none;border:none;color:var(--text);font-family:inherit;font-size:14px;width:100%;}
+  .search-form input:focus{outline:none;}
+  .search-form svg{flex-shrink:0;opacity:.6;}
+  .icon-btn{background:none;border:1px solid var(--border);color:var(--text-muted);width:38px;height:38px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:border-color .15s,color .15s;}
+  .icon-btn:hover{color:var(--text);border-color:var(--text-faint);}
+  .burger{display:none;}
+
+  @media(max-width:860px){
+    .header-row{gap:14px;}
+    nav.main-nav{display:none;position:absolute;top:64px;left:0;right:0;background:var(--bg-elev);flex-direction:column;gap:0;border-bottom:1px solid var(--border);padding:6px 24px 14px;}
+    nav.main-nav.open{display:flex;}
+    nav.main-nav a{padding:10px 0;border-bottom:1px solid var(--border);}
+    .search-form{width:auto;flex:1;}
+    .search-form:focus-within{width:auto;}
+    .burger{display:flex;}
+  }
+
+  /* buttons */
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:var(--radius);font-size:14px;font-weight:600;border:1px solid transparent;transition:opacity .15s,border-color .15s,background .15s;}
+  .btn-primary{background:var(--accent);color:#151107;}
+  .btn-primary:hover{opacity:.88;}
+  .btn-ghost{border-color:var(--border);color:var(--text);background:none;}
+  .btn-ghost:hover{border-color:var(--text-faint);}
+  .btn-ghost.active{border-color:var(--accent);color:var(--accent);background:var(--accent-dim);}
+  .btn[disabled]{opacity:.35;pointer-events:none;}
+  .btn-sm{padding:7px 12px;font-size:13px;}
+
+  /* layout helpers */
+  main{min-height:70vh;padding:36px 0 80px;}
+  .section{margin-bottom:52px;}
+  .section-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px;gap:12px;}
+  .section-head h2{font-family:var(--font-display);font-size:21px;font-weight:600;margin:0;letter-spacing:-.01em;}
+  .section-head .see-all{font-size:13px;color:var(--text-muted);display:flex;align-items:center;gap:4px;}
+  .section-head .see-all:hover{color:var(--accent);}
+  h1,h2,h3{font-family:var(--font-display);}
+  .muted{color:var(--text-muted);}
+  .faint{color:var(--text-faint);}
+
+  /* poster grid */
+  .grid{display:grid;grid-template-columns:repeat(6,1fr);gap:18px;}
+  @media(max-width:1020px){.grid{grid-template-columns:repeat(4,1fr);}}
+  @media(max-width:640px){.grid{grid-template-columns:repeat(3,1fr);gap:12px;}}
+  .card{display:block;}
+  .card .poster-box{position:relative;aspect-ratio:2/3;overflow:hidden;border-radius:var(--radius);background:var(--surface);border:1px solid var(--border);}
+  .card .poster-box img{width:100%;height:100%;object-fit:cover;transition:transform .35s ease;}
+  .card:hover .poster-box img{transform:scale(1.045);}
+  .card .ep-badge{position:absolute;bottom:6px;left:6px;background:rgba(12,14,17,.85);border:1px solid var(--border);font-size:11px;padding:2px 7px;border-radius:2px;color:var(--text);}
+  .card .score-badge{position:absolute;top:6px;right:6px;background:rgba(12,14,17,.85);border:1px solid var(--border);font-size:11px;padding:2px 6px;border-radius:2px;color:var(--accent);}
+  .card .title{margin-top:9px;font-size:13.5px;line-height:1.35;color:var(--text);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+  .card .sub{font-size:11.5px;color:var(--text-faint);margin-top:3px;}
+
+  /* hero / spotlight */
+  .hero{display:grid;grid-template-columns:220px 1fr;gap:32px;padding-bottom:44px;border-bottom:1px solid var(--border);margin-bottom:44px;}
+  @media(max-width:700px){.hero{grid-template-columns:130px 1fr;gap:18px;}}
+  .hero .poster-box{aspect-ratio:2/3;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);background:var(--surface);}
+  .hero .poster-box img{width:100%;height:100%;object-fit:cover;}
+  .hero-info{display:flex;flex-direction:column;justify-content:center;min-width:0;}
+  .kicker{font-size:12.5px;color:var(--ongoing);display:flex;align-items:center;gap:6px;margin-bottom:10px;}
+  .kicker .dot{width:6px;height:6px;border-radius:50%;background:var(--ongoing);display:inline-block;}
+  .hero-info h1{font-size:clamp(24px,4vw,38px);line-height:1.08;margin:0 0 12px;font-weight:600;letter-spacing:-.01em;}
+  .hero-info p.desc{color:var(--text-muted);max-width:62ch;margin:0 0 18px;font-size:14.5px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+  .hero-actions{display:flex;gap:10px;flex-wrap:wrap;}
+
+  /* tags */
+  .tags{display:flex;flex-wrap:wrap;gap:7px;}
+  .tag{font-size:12px;color:var(--text-muted);border:1px solid var(--border);padding:4px 10px;border-radius:2px;transition:border-color .15s,color .15s;}
+  a.tag:hover{border-color:var(--accent);color:var(--accent);}
+
+  /* detail page */
+  .detail-top{display:grid;grid-template-columns:230px 1fr;gap:34px;margin-bottom:38px;}
+  @media(max-width:700px){.detail-top{grid-template-columns:1fr;}
+    .detail-top .poster-box{width:150px;margin:0 auto;}}
+  .detail-top .poster-box{aspect-ratio:2/3;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);background:var(--surface);}
+  .detail-top .poster-box img{width:100%;height:100%;object-fit:cover;}
+  .info-table{display:grid;grid-template-columns:auto 1fr;gap:7px 20px;font-size:13.5px;margin:18px 0 20px;}
+  .info-table dt{color:var(--text-faint);}
+  .info-table dd{margin:0;color:var(--text);}
+  .synopsis{color:var(--text-muted);font-size:14.5px;max-width:75ch;}
+  .synopsis[data-collapsed="true"]{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;}
+  .toggle-synopsis{font-size:12.5px;color:var(--accent);margin-top:6px;display:inline-block;}
+
+  .ep-list{border-top:1px solid var(--border);}
+  .ep-row{display:flex;align-items:center;gap:16px;padding:14px 4px;border-bottom:1px solid var(--border);transition:border-color .15s,padding-left .15s;}
+  .ep-row:hover{border-left:2px solid var(--accent);padding-left:14px;}
+  .ep-row .num{font-family:var(--font-display);font-size:15px;color:var(--text-faint);width:34px;flex-shrink:0;}
+  .ep-row .ttl{flex:1;font-size:14px;min-width:0;}
+  .ep-row .meta{font-size:12px;color:var(--text-faint);flex-shrink:0;}
+
+  /* watch page */
+  .watch-layout{display:grid;grid-template-columns:1fr 300px;gap:28px;align-items:start;}
+  @media(max-width:920px){.watch-layout{grid-template-columns:1fr;}}
+  .player-shell{background:#000;border:1px solid var(--border);border-radius:var(--radius);aspect-ratio:16/9;position:relative;overflow:hidden;}
+  .player-shell iframe,.player-shell video{width:100%;height:100%;border:none;background:#000;}
+  .player-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--text-faint);font-size:13px;text-align:center;padding:20px;}
+  .watch-title{font-family:var(--font-display);font-size:20px;margin:16px 0 4px;font-weight:600;}
+  .watch-sub{color:var(--text-muted);font-size:13.5px;margin-bottom:16px;}
+  .ep-nav{display:flex;gap:10px;margin-bottom:26px;}
+  .server-group{margin-bottom:22px;}
+  .server-group h4{font-size:12.5px;text-transform:none;color:var(--text-faint);margin:0 0 8px;font-weight:600;}
+  .server-pills{display:flex;flex-wrap:wrap;gap:8px;}
+  .side-block{border:1px solid var(--border);border-radius:var(--radius);padding:16px;background:var(--surface);margin-bottom:18px;}
+  .side-block h3{font-size:14px;margin:0 0 12px;font-weight:600;}
+  .dl-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:8px 0;border-bottom:1px solid var(--border);}
+  .dl-row:last-child{border-bottom:none;}
+  .dl-links{display:flex;gap:8px;flex-wrap:wrap;}
+  .dl-links a{color:var(--accent);font-size:12.5px;border-bottom:1px dotted var(--accent);}
+
+  /* states */
+  .skel{background:linear-gradient(90deg,var(--surface) 25%,var(--surface-2) 37%,var(--surface) 63%);background-size:400% 100%;animation:shimmer 1.4s ease infinite;border-radius:var(--radius);}
+  @keyframes shimmer{0%{background-position:100% 0}100%{background-position:0 0}}
+  .skel-poster{aspect-ratio:2/3;}
+  .skel-line{height:12px;margin-top:9px;width:80%;}
+  .empty-state,.error-state{border:1px dashed var(--border);border-radius:var(--radius);padding:48px 24px;text-align:center;color:var(--text-muted);}
+  .error-state{border-color:var(--danger);color:var(--danger);}
+  .error-state .detail{color:var(--text-faint);font-size:12.5px;margin-top:8px;}
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--surface-2);border:1px solid var(--border);padding:11px 18px;border-radius:var(--radius);font-size:13px;z-index:100;box-shadow:0 8px 24px rgba(0,0,0,.4);}
+
+  .pager{display:flex;justify-content:center;gap:10px;margin-top:30px;}
+
+  details.debug{margin-top:30px;border-top:1px solid var(--border);padding-top:14px;}
+  details.debug summary{cursor:pointer;font-size:12px;color:var(--text-faint);}
+  details.debug pre{white-space:pre-wrap;word-break:break-word;font-size:11.5px;color:var(--text-muted);background:var(--surface);border:1px solid var(--border);padding:14px;border-radius:var(--radius);max-height:320px;overflow:auto;margin-top:10px;}
+
+  .genre-cloud{display:flex;flex-wrap:wrap;gap:9px;}
+
+  .settings-box{max-width:520px;}
+  .field{margin-bottom:18px;}
+  .field label{display:block;font-size:13px;color:var(--text-muted);margin-bottom:6px;}
+  .field input[type=text]{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:var(--radius);font-family:inherit;font-size:13.5px;}
+  .field input:focus{outline:none;border-color:var(--accent);}
+  .switch-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);}
+
+  footer.site{border-top:1px solid var(--border);padding:30px 0;margin-top:40px;}
+  footer.site .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;font-size:12.5px;color:var(--text-faint);}
+  footer.site a{color:var(--text-muted);}
+
+  .fav-btn{display:inline-flex;align-items:center;gap:7px;}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap header-row">
+    <button class="icon-btn burger" id="burgerBtn" aria-label="Menu">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 4.5H16M2 9H16M2 13.5H16" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+    </button>
+    <a href="#/" class="logo">Maonime<span class="dot">.</span></a>
+    <nav class="main-nav" id="mainNav">
+      <a href="#/" data-nav="/">Beranda</a>
+      <a href="#/ongoing" data-nav="/ongoing">Sedang tayang</a>
+      <a href="#/completed" data-nav="/completed">Selesai tayang</a>
+      <a href="#/genre" data-nav="/genre">Genre</a>
+      <a href="#/jadwal" data-nav="/jadwal">Jadwal</a>
+      <a href="#/favorit" data-nav="/favorit">Favorit</a>
+    </nav>
+    <form class="search-form" id="searchForm">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="6.5" cy="6.5" r="4.8" stroke="currentColor" stroke-width="1.3"/><path d="M10.2 10.4L13 13" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      <input type="text" id="searchInput" placeholder="cari judul anime…" autocomplete="off">
+    </form>
+    <a href="#/pengaturan" class="icon-btn" title="Pengaturan" aria-label="Pengaturan">
+      <svg width="17" height="17" viewBox="0 0 17 17" fill="none"><circle cx="8.5" cy="8.5" r="2.4" stroke="currentColor" stroke-width="1.2"/><path d="M8.5 1.5v2M8.5 13.5v2M1.5 8.5h2M13.5 8.5h2M3.6 3.6l1.4 1.4M12 12l1.4 1.4M3.6 13.4l1.4-1.4M12 5l1.4-1.4" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>
+    </a>
+  </div>
+</header>
+
+<main><div class="wrap" id="app"></div></main>
+
+<footer class="site">
+  <div class="wrap">
+    <span>Maonime mengambil data dari <a href="https://github.com/wajik45/wajik-anime-api" target="_blank" rel="noopener">wajik-anime-api</a> (sumber: otakudesu). Hormati hak cipta studio &amp; penerbit asli.</span>
+    <span id="apiBaseFooter"></span>
+  </div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+
+/* ---------- config & storage ---------- */
+const DEFAULT_BASE = "https://url-railway-kamu.up.railway.app/otakudesu";
+const LS = {
+  base: "larut_base_url",
+  proxy: "larut_use_proxy",
+  fav: "larut_favorites",
+  hist: "larut_history"
+};
+function getBase(){ return localStorage.getItem(LS.base) || DEFAULT_BASE; }
+function setBase(v){ localStorage.setItem(LS.base, v || DEFAULT_BASE); }
+function useProxy(){ return localStorage.getItem(LS.proxy) === "1"; }
+function setUseProxy(v){ localStorage.setItem(LS.proxy, v ? "1" : "0"); }
+function getJSON(key, fallback){ try{ return JSON.parse(localStorage.getItem(key)) || fallback; }catch(e){ return fallback; } }
+function setJSON(key, val){ localStorage.setItem(key, JSON.stringify(val)); }
+
+document.getElementById("apiBaseFooter").textContent = "API: " + getBase().replace(/^https?:\/\//,"");
+
+/* ---------- fetch helper ---------- */
+async function api(path){
+  let url = getBase().replace(/\/$/,"") + path;
+  if(useProxy()) url = "https://corsproxy.io/?url=" + encodeURIComponent(url);
+  const res = await fetch(url, { headers:{ "Accept":"application/json" } });
+  if(!res.ok) throw new Error("HTTP " + res.status);
+  const json = await res.json();
+  return json;
+}
+
+/* ---------- deep helpers (schema-agnostic) ---------- */
+function isPlainObj(v){ return v && typeof v === "object" && !Array.isArray(v); }
+
+function deepFindAll(obj, predicate, seen){
+  seen = seen || new Set();
+  let out = [];
+  if(!obj || typeof obj !== "object" || seen.has(obj)) return out;
+  seen.add(obj);
+  if(predicate(obj)) out.push(obj);
+  const vals = Array.isArray(obj) ? obj : Object.values(obj);
+  for(const v of vals){
+    if(v && typeof v === "object") out = out.concat(deepFindAll(v, predicate, seen));
+  }
+  return out;
+}
+function deepFindValue(obj, keyRegex, seen){
+  seen = seen || new Set();
+  if(!obj || typeof obj !== "object" || seen.has(obj)) return undefined;
+  seen.add(obj);
+  if(!Array.isArray(obj)){
+    for(const k in obj){
+      if(keyRegex.test(k) && (typeof obj[k] === "string" || typeof obj[k] === "number") && obj[k] !== "") return obj[k];
+    }
+  }
+  const vals = Array.isArray(obj) ? obj : Object.values(obj);
+  for(const v of vals){
+    if(v && typeof v === "object"){
+      const r = deepFindValue(v, keyRegex, seen);
+      if(r !== undefined) return r;
+    }
+  }
+  return undefined;
+}
+
+function firstOf(obj, keys){
+  for(const k of keys){ if(obj && obj[k] !== undefined && obj[k] !== null && obj[k] !== "") return obj[k]; }
+  return undefined;
+}
+function slugFromUrl(u){
+  if(!u || typeof u !== "string") return "";
+  try{
+    const clean = u.replace(/\/+$/,"");
+    const parts = clean.split("/").filter(Boolean);
+    return parts[parts.length-1] || "";
+  }catch(e){ return ""; }
+}
+
+function getTitle(it){ return firstOf(it,["title","judul","name"]) || "Tanpa judul"; }
+function getPoster(it){ return firstOf(it,["poster","thumbnail","thumb","image","cover","posterUrl"]) || ""; }
+function getScore(it){ return firstOf(it,["score","rating","nilai"]); }
+function getStatusText(it){ return firstOf(it,["status"]); }
+function getEpText(it){ return firstOf(it,["episode","episodeTerbaru","currentEpisode","latestEpisode","totalEpisode","episodes"]); }
+function getDay(it){ return firstOf(it,["day","hariRilis","releaseDay"]); }
+function getId(it){
+  const direct = firstOf(it,["animeId","anime_id","id","slug","endpoint"]);
+  if(direct) return String(direct).replace(/\/+$/,"");
+  const url = firstOf(it,["href","url","otakudesuUrl","link","animeUrl"]);
+  return slugFromUrl(url);
+}
+function getEpisodeId(it){
+  const direct = firstOf(it,["episodeId","episode_id","id","slug","endpoint"]);
+  if(direct) return String(direct).replace(/\/+$/,"");
+  const url = firstOf(it,["href","url","episodeUrl","link"]);
+  return slugFromUrl(url);
+}
+function getGenreList(it){
+  const g = firstOf(it,["genres","genreList","genre"]);
+  if(!g) return [];
+  if(Array.isArray(g)) return g.map(x => isPlainObj(x) ? (x.title||x.name||x.genre||"") : x).filter(Boolean);
+  if(typeof g === "string") return g.split(",").map(s=>s.trim()).filter(Boolean);
+  return [];
+}
+function getGenreId(g){
+  if(typeof g === "string") return g;
+  return firstOf(g,["genreId","id","slug","endpoint"]) || slugFromUrl(firstOf(g,["href","url"]));
+}
+function getGenreName(g){
+  if(typeof g === "string") return g;
+  return firstOf(g,["title","name","genre"]) || getGenreId(g);
+}
+
+function extractList(data){
+  if(Array.isArray(data)) return data;
+  if(!isPlainObj(data)) return [];
+  const preferred = ["animeList","anime_list","list","results","data","genreList"];
+  for(const k of preferred){ if(Array.isArray(data[k])) return data[k]; }
+  for(const k in data){ if(Array.isArray(data[k]) && data[k].length && isPlainObj(data[k][0])) return data[k]; }
+  return [];
+}
+function extractEpisodeList(data){
+  const preferred = ["episodeList","episode_list","episodes"];
+  for(const k of preferred){ if(isPlainObj(data) && Array.isArray(data[k])) return data[k]; }
+  const found = deepFindAll(data, o => Array.isArray(o) === false && (o.episodeId || o.episode_id) !== undefined);
+  if(found.length) return found;
+  // fallback: any array whose items look episode-ish
+  for(const k in data){
+    if(Array.isArray(data[k]) && data[k].length && isPlainObj(data[k][0])){
+      const sample = data[k][0];
+      if(/episode/i.test(JSON.stringify(Object.keys(sample)))) return data[k];
+    }
+  }
+  return [];
+}
+function collectServers(data){
+  const nodes = deepFindAll(data, o => !Array.isArray(o) && (o.serverId !== undefined || o.server_id !== undefined));
+  return nodes.map(n => ({
+    id: firstOf(n,["serverId","server_id"]),
+    name: firstOf(n,["title","name","server","label"]) || "Server",
+    quality: firstOf(n,["quality","resolution"]) || ""
+  })).filter(s => s.id);
+}
+function collectDownloads(data){
+  const nodes = deepFindAll(data, o => !Array.isArray(o) && typeof o.url === "string" && /^https?:\/\//.test(o.url));
+  const groups = {};
+  nodes.forEach(n=>{
+    const res = firstOf(n,["resolution","quality"]) || "Lainnya";
+    const provider = firstOf(n,["provider","title","name"]) || "Unduh";
+    groups[res] = groups[res] || [];
+    if(!groups[res].some(x=>x.url===n.url)) groups[res].push({provider, url:n.url});
+  });
+  return groups;
+}
+function findDirectStreamUrl(data){
+  const v = deepFindValue(data, /^(streamUrl|stream_url|url|player|embed)$/i);
+  return typeof v === "string" && /^https?:\/\//.test(v) ? v : "";
+}
+function findAdjacentEpisode(data, dir){
+  // dir: 'prev' | 'next'
+  const re = new RegExp(dir + ".*episode.*id","i");
+  let v = deepFindValue(data, re);
+  if(v) return String(v);
+  const hasFlag = deepFindValue(data, new RegExp("has"+ (dir==='prev'?'Prev':'Next') +"Episode","i"));
+  const objs = deepFindAll(data, o => !Array.isArray(o) && new RegExp(dir,"i").test(JSON.stringify(Object.keys(o))) );
+  for(const o of objs){
+    const id = firstOf(o,["episodeId","episode_id","id","slug"]);
+    if(id) return String(id);
+    const url = firstOf(o,["href","url"]);
+    if(url) return slugFromUrl(url);
+  }
+  return "";
+}
+
+/* ---------- favorites / history ---------- */
+function isFav(id){ return getJSON(LS.fav,[]).some(f=>f.id===id); }
+function toggleFav(item){
+  let list = getJSON(LS.fav,[]);
+  if(list.some(f=>f.id===item.id)) list = list.filter(f=>f.id!==item.id);
+  else list.unshift(item);
+  setJSON(LS.fav, list);
+}
+function pushHistory(entry){
+  let list = getJSON(LS.hist,[]);
+  list = list.filter(h=>h.episodeId!==entry.episodeId);
+  list.unshift(entry);
+  setJSON(LS.hist, list.slice(0,40));
+}
+
+/* ---------- small render utils ---------- */
+function el(html){ const t=document.createElement("template"); t.innerHTML=html.trim(); return t.content.firstChild; }
+function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function skeletonGrid(n){
+  let h = '<div class="grid">';
+  for(let i=0;i<n;i++) h += '<div><div class="skel skel-poster"></div><div class="skel skel-line"></div></div>';
+  return h + '</div>';
+}
+function errorBlock(msg, e){
+  return `<div class="error-state">Gagal memuat data.<div class="detail">${esc(msg)}${e? " — "+esc(e.message||e):""}<br>Cek koneksi, atau ganti Base URL API di halaman <a href="#/pengaturan" style="color:var(--accent)">Pengaturan</a>.</div></div>`;
+}
+function emptyBlock(msg){ return `<div class="empty-state">${esc(msg)}</div>`; }
+function toast(msg){
+  const t = el(`<div class="toast">${esc(msg)}</div>`);
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(), 2600);
+}
+function debugPanel(label, data){
+  return `<details class="debug"><summary>Data mentah — ${esc(label)}</summary><pre>${esc(JSON.stringify(data,null,2)).slice(0,6000)}</pre></details>`;
+}
+
+function posterCard(item){
+  const id = getId(item), title = getTitle(item), poster = getPoster(item);
+  const ep = getEpText(item), score = getScore(item);
+  return `<a class="card" href="#/anime/${encodeURIComponent(id)}">
+    <div class="poster-box">
+      <img src="${esc(poster)}" alt="${esc(title)}" loading="lazy" onerror="this.style.opacity=0.15">
+      ${ep? `<span class="ep-badge">Eps ${esc(ep)}</span>`:""}
+      ${score? `<span class="score-badge">★ ${esc(score)}</span>`:""}
+    </div>
+    <div class="title">${esc(title)}</div>
+    ${getDay(item) ? `<div class="sub">${esc(getDay(item))}</div>`:""}
+  </a>`;
+}
+
+/* ---------- router ---------- */
+const routes = [];
+function route(path, handler){ routes.push({path, handler}); }
+function parseHash(){
+  let h = location.hash.slice(1) || "/";
+  const [p, qs] = h.split("?");
+  const params = new URLSearchParams(qs||"");
+  const segs = p.split("/").filter(Boolean);
+  return {segs, params, raw:p};
+}
+async function render(){
+  document.querySelectorAll("nav.main-nav a").forEach(a=>a.classList.remove("active"));
+  const app = document.getElementById("app");
+  const {segs, params} = parseHash();
+  window.scrollTo({top:0,behavior:"instant" in window ? "instant":"auto"});
+  document.getElementById("mainNav").classList.remove("open");
+
+  if(segs.length===0){ setActiveNav("/"); return pageHome(app); }
+  if(segs[0]==="ongoing"){ setActiveNav("/ongoing"); return pageList(app,"ongoing","Sedang tayang", params); }
+  if(segs[0]==="completed"){ setActiveNav("/completed"); return pageList(app,"completed","Selesai tayang", params); }
+  if(segs[0]==="genre" && segs.length===1){ setActiveNav("/genre"); return pageGenreIndex(app); }
+  if(segs[0]==="genre" && segs.length>1){ return pageGenreDetail(app, segs[1], params); }
+  if(segs[0]==="jadwal"){ setActiveNav("/jadwal"); return pageSchedule(app); }
+  if(segs[0]==="favorit"){ setActiveNav("/favorit"); return pageFavorites(app); }
+  if(segs[0]==="pengaturan"){ return pageSettings(app); }
+  if(segs[0]==="cari"){ return pageSearch(app, params.get("q")||""); }
+  if(segs[0]==="anime" && segs[1]){ return pageDetail(app, segs[1]); }
+  if(segs[0]==="watch" && segs[1]){ return pageWatch(app, segs[1]); }
+  app.innerHTML = emptyBlock("Halaman tidak ditemukan.");
+}
+function setActiveNav(p){ const a=document.querySelector(`nav.main-nav a[data-nav="${p}"]`); if(a) a.classList.add("active"); }
+window.addEventListener("hashchange", render);
+
+/* ---------- pages ---------- */
+async function pageHome(app){
+  app.innerHTML = `
+    <div class="hero"><div class="skel skel-poster" style="width:220px"></div>
+      <div><div class="skel skel-line" style="width:40%"></div><div class="skel skel-line" style="width:90%;height:30px"></div><div class="skel skel-line" style="width:70%"></div></div>
+    </div>
+    <div class="section"><div class="section-head"><h2>Sedang tayang</h2></div>${skeletonGrid(6)}</div>
+    <div class="section"><div class="section-head"><h2>Baru selesai</h2></div>${skeletonGrid(6)}</div>`;
+  try{
+    const [ongRes, compRes] = await Promise.all([ api("/ongoing?page=1"), api("/completed?page=1") ]);
+    const ongoing = extractList(ongRes.data).slice(0,12);
+    const completed = extractList(compRes.data).slice(0,6);
+    const spot = ongoing[0];
+
+    let html = "";
+    if(spot){
+      const id = getId(spot);
+      html += `<div class="hero">
+        <div class="poster-box"><img src="${esc(getPoster(spot))}" alt=""></div>
+        <div class="hero-info">
+          <div class="kicker"><span class="dot"></span>sorotan malam ini</div>
+          <h1>${esc(getTitle(spot))}</h1>
+          <p class="desc">${esc(getGenreList(spot).join(" · ") || "Anime sub Indonesia terbaru, diperbarui tiap minggu.")}</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#/anime/${encodeURIComponent(id)}">Lihat detail</a>
+            <a class="btn btn-ghost" href="#/ongoing">Semua yang tayang</a>
+          </div>
+        </div>
+      </div>`;
+    }
+    html += `<div class="section"><div class="section-head"><h2>Sedang tayang</h2><a class="see-all" href="#/ongoing">lihat semua</a></div>
+      ${ongoing.length? `<div class="grid">${ongoing.map(posterCard).join("")}</div>` : emptyBlock("Belum ada data.")}</div>`;
+    html += `<div class="section"><div class="section-head"><h2>Baru selesai tayang</h2><a class="see-all" href="#/completed">lihat semua</a></div>
+      ${completed.length? `<div class="grid">${completed.map(posterCard).join("")}</div>` : emptyBlock("Belum ada data.")}</div>`;
+    html += debugPanel("home", {ongoing: ongRes, completed: compRes});
+    app.innerHTML = html;
+  }catch(e){ app.innerHTML = errorBlock("Tidak bisa mengambil data beranda.", e); }
+}
+
+async function pageList(app, endpoint, label, params){
+  const page = parseInt(params.get("page")||"1",10) || 1;
+  app.innerHTML = `<div class="section-head"><h2>${esc(label)}</h2></div>${skeletonGrid(12)}`;
+  try{
+    const res = await api(`/${endpoint}?page=${page}`);
+    const list = extractList(res.data);
+    const pg = res.pagination || {};
+    let html = `<div class="section-head"><h2>${esc(label)}</h2><span class="muted" style="font-size:13px">halaman ${page}</span></div>`;
+    html += list.length? `<div class="grid">${list.map(posterCard).join("")}</div>` : emptyBlock("Tidak ada anime pada halaman ini.");
+    html += `<div class="pager">
+      <a class="btn btn-ghost btn-sm ${page<=1?'disabled':''}" href="#/${endpoint}?page=${page-1}" ${page<=1?'aria-disabled="true" style="pointer-events:none;opacity:.35"':''}>← Sebelumnya</a>
+      <a class="btn btn-ghost btn-sm" href="#/${endpoint}?page=${page+1}">Selanjutnya →</a>
+    </div>`;
+    html += debugPanel(endpoint, res);
+    app.innerHTML = html;
+  }catch(e){ app.innerHTML = errorBlock("Tidak bisa mengambil daftar anime.", e); }
+}
+
+async function pageSearch(app, q){
+  document.getElementById("searchInput").value = q;
+  if(!q){ app.innerHTML = emptyBlock("Ketik judul anime pada kolom pencarian di atas."); return; }
+  app.innerHTML = `<div class="section-head"><h2>Hasil untuk “${esc(q)}”</h2></div>${skeletonGrid(9)}`;
+  try{
+    const res = await api(`/search?q=${encodeURIComponent(q)}`);
+    const list = extractList(res.data);
+    let html = `<div class="section-head"><h2>Hasil untuk “${esc(q)}”</h2><span class="muted" style="font-size:13px">${list.length} ditemukan</span></div>`;
+    html += list.length? `<div class="grid">${list.map(posterCard).join("")}</div>` : emptyBlock("Tidak ada anime yang cocok.");
+    html += debugPanel("search", res);
+    app.innerHTML = html;
+  }catch(e){ app.innerHTML = errorBlock("Pencarian gagal.", e); }
+}
+
+async function pageGenreIndex(app){
+  app.innerHTML = `<div class="section-head"><h2>Genre</h2></div><div class="genre-cloud">${Array(18).fill('<span class="skel" style="display:inline-block;width:70px;height:30px"></span>').join("")}</div>`;
+  try{
+    const res = await api("/genre");
+    const list = extractList(res.data);
+    let html = `<div class="section-head"><h2>Genre</h2></div>`;
+    html += list.length? `<div class="genre-cloud">${list.map(g=>`<a class="tag" href="#/genre/${encodeURIComponent(getGenreId(g))}">${esc(getGenreName(g))}</a>`).join("")}</div>` : emptyBlock("Daftar genre tidak tersedia.");
+    html += debugPanel("genre", res);
+    app.innerHTML = html;
+  }catch(e){ app.innerHTML = errorBlock("Tidak bisa mengambil daftar genre.", e); }
+}
+
+async function pageGenreDetail(app, genreId, params){
+  const page = parseInt(params.get("page")||"1",10) || 1;
+  app.innerHTML = `<div class="section-head"><h2>Genre — ${esc(genreId)}</h2></div>${skeletonGrid(12)}`;
+  try{
+    const res = await api(`/genre/${encodeURIComponent(genreId)}?page=${page}`);
+    const list = extractList(res.data);
+    let html = `<div class="section-head"><h2>Genre — ${esc(genreId)}</h2><span class="muted" style="font-size:13px">halaman ${page}</span></div>`;
+    html += list.length? `<div class="grid">${list.map(posterCard).join("")}</div>` : emptyBlock("Tidak ada anime pada genre ini.");
+    html += `<div class="pager">
+      <a class="btn btn-ghost btn-sm" href="#/genre/${encodeURIComponent(genreId)}?page=${Math.max(1,page-1)}">← Sebelumnya</a>
+      <a class="btn btn-ghost btn-sm" href="#/genre/${encodeURIComponent(genreId)}?page=${page+1}">Selanjutnya →</a>
+    </div>`;
+    html += debugPanel("genre/"+genreId, res);
+    app.innerHTML = html;
+  }catch(e){ app.innerHTML = errorBlock("Tidak bisa mengambil anime pada genre ini.", e); }
+}
+
+async function pageSchedule(app){
+  app.innerHTML = `<div class="section-head"><h2>Jadwal rilis</h2></div>${skeletonGrid(6)}`;
+  try{
+    const res = await api("/schedule");
+    const data = res.data;
+    let days = [];
+    if(Array.isArray(data)) days = data;
+    else if(isPlainObj(data)){
+      for(const k in data){ if(Array.isArray(data[k])) days.push({day:k, list:data[k]}); }
+      if(!days.length){
+        const arr = extractList(data);
+        if(arr.length) days = [{day:"Jadwal", list:arr}];
+      }
+    }
+    let html = `<div class="section-head"><h2>Jadwal rilis</h2></div>`;
+    if(!days.length){ html += emptyBlock("Jadwal tidak tersedia."); }
+    else{
+      days.forEach(d=>{
+        const dayName = d.day || firstOf(d,["hari","name"]) || "Hari";
+        const list = d.list || extractList(d);
+        html += `<div class="section"><div class="section-head"><h2 style="font-size:16px">${esc(dayName)}</h2></div>
+          ${list.length? `<div class="grid">${list.map(posterCard).join("")}</div>` : emptyBlock("Tidak ada anime.")}</div>`;
+      });
+    }
+    html += debugPanel("schedule", res);
+    app.innerHTML = html;
+  }catch(e){ app.innerHTML = errorBlock("Tidak bisa mengambil jadwal rilis.", e); }
+}
+
+async function pageFavorites(app){
+  const list = getJSON(LS.fav,[]);
+  const hist = getJSON(LS.hist,[]);
+  let html = `<div class="section-head"><h2>Favorit</h2></div>`;
+  html += list.length? `<div class="grid">${list.map(f=>posterCard({title:f.title, poster:f.poster, animeId:f.id})).join("")}</div>` : emptyBlock("Belum ada anime favorit. Tekan tombol ♥ di halaman detail anime untuk menambahkan.");
+  html += `<div class="section" style="margin-top:44px"><div class="section-head"><h2>Lanjutkan menonton</h2></div>`;
+  html += hist.length? `<div class="grid">${hist.map(h=>`
+      <a class="card" href="#/watch/${encodeURIComponent(h.episodeId)}">
+        <div class="poster-box"><img src="${esc(h.poster||'')}" alt="" onerror="this.style.opacity=0.15"></div>
+        <div class="title">${esc(h.title||'Episode')}</div>
+        <div class="sub">${esc(h.animeTitle||'')}</div>
+      </a>`).join("")}</div>` : emptyBlock("Belum ada riwayat tontonan.");
+  html += `</div>`;
+  app.innerHTML = html;
+}
+
+async function pageSettings(app){
+  const base = getBase();
+  app.innerHTML = `
+    <div class="section-head"><h2>Pengaturan</h2></div>
+    <div class="settings-box">
+      <div class="field">
+        <label for="baseUrlInput">Base URL API (wajik-anime-api / sumber otakudesu)</label>
+        <input type="text" id="baseUrlInput" value="${esc(base)}">
+      </div>
+      <div class="switch-row">
+        <span>Gunakan proxy CORS jika permintaan diblokir</span>
+        <button class="btn btn-ghost btn-sm ${useProxy()?'active':''}" id="proxyToggle">${useProxy()?'Aktif':'Nonaktif'}</button>
+      </div>
+      <div style="margin-top:20px;display:flex;gap:10px">
+        <button class="btn btn-primary" id="saveSettings">Simpan</button>
+        <button class="btn btn-ghost" id="resetSettings">Kembalikan default</button>
+      </div>
+      <p class="faint" style="margin-top:22px;font-size:12.5px">
+        Larut adalah antarmuka statis — semua permintaan dikirim langsung dari peramban ke Base URL di atas.
+        Jika kamu meng-hosting sendiri wajik-anime-api (mis. <code>http://localhost:3001/otakudesu</code>), ganti nilainya di sini.
+      </p>
+    </div>`;
+  document.getElementById("proxyToggle").addEventListener("click", (ev)=>{
+    setUseProxy(!useProxy());
+    ev.target.textContent = useProxy() ? "Aktif" : "Nonaktif";
+    ev.target.classList.toggle("active", useProxy());
+  });
+  document.getElementById("saveSettings").addEventListener("click", ()=>{
+    setBase(document.getElementById("baseUrlInput").value.trim());
+    document.getElementById("apiBaseFooter").textContent = "API: " + getBase().replace(/^https?:\/\//,"");
+    toast("Pengaturan disimpan.");
+  });
+  document.getElementById("resetSettings").addEventListener("click", ()=>{
+    setBase(""); setUseProxy(false);
+    document.getElementById("baseUrlInput").value = DEFAULT_BASE;
+    document.getElementById("proxyToggle").textContent = "Nonaktif";
+    document.getElementById("proxyToggle").classList.remove("active");
+    document.getElementById("apiBaseFooter").textContent = "API: " + DEFAULT_BASE.replace(/^https?:\/\//,"");
+    toast("Dikembalikan ke pengaturan awal.");
+  });
+}
+
+async function pageDetail(app, animeId){
+  app.innerHTML = `<div class="detail-top"><div class="skel skel-poster"></div><div><div class="skel skel-line" style="width:60%;height:26px"></div><div class="skel skel-line" style="width:100%"></div><div class="skel skel-line" style="width:90%"></div></div></div>`;
+  try{
+    const res = await api(`/anime/${encodeURIComponent(animeId)}`);
+    const data = res.data || {};
+    const title = getTitle(data);
+    const poster = getPoster(data);
+    const synopsis = firstOf(data,["synopsis","sinopsis","description"]) || "Sinopsis tidak tersedia.";
+    const status = getStatusText(data) || "-";
+    const score = getScore(data) || "-";
+    const studio = firstOf(data,["studio","producer","author"]) || "-";
+    const totalEp = getEpText(data) || "-";
+    const genres = getGenreList(data);
+    const episodes = extractEpisodeList(data);
+    const fav = isFav(animeId);
+
+    let html = `<div class="detail-top">
+      <div class="poster-box"><img src="${esc(poster)}" alt="${esc(title)}" onerror="this.style.opacity=0.15"></div>
+      <div>
+        <div class="kicker"><span class="dot" style="background:${status && /ongoing|tayang/i.test(status)?'var(--ongoing)':'var(--text-faint)'}"></span>${esc(status)}</div>
+        <h1 style="font-size:clamp(22px,3vw,32px);margin:0 0 10px;font-weight:600;letter-spacing:-.01em">${esc(title)}</h1>
+        <dl class="info-table">
+          <dt>Skor</dt><dd>${esc(score)}</dd>
+          <dt>Episode</dt><dd>${esc(totalEp)}</dd>
+          <dt>Studio</dt><dd>${esc(studio)}</dd>
+        </dl>
+        ${genres.length? `<div class="tags" style="margin-bottom:16px">${genres.map(g=>`<span class="tag">${esc(g)}</span>`).join("")}</div>`:""}
+        <p class="synopsis" data-collapsed="true" id="synopsisText">${esc(synopsis)}</p>
+        <span class="toggle-synopsis" id="synopsisToggle" role="button" tabindex="0">Baca selengkapnya</span>
+        <div class="hero-actions" style="margin-top:18px">
+          ${episodes.length? `<a class="btn btn-primary" href="#/watch/${encodeURIComponent(getEpisodeId(episodes[0]))}">Tonton episode 1</a>`:""}
+          <button class="btn btn-ghost fav-btn" id="favBtn">${fav? "♥ Di favorit":"♡ Tambah favorit"}</button>
+        </div>
+      </div>
+    </div>`;
+
+    html += `<div class="section"><div class="section-head"><h2>Daftar episode</h2><span class="muted" style="font-size:13px">${episodes.length} episode</span></div>`;
+    html += episodes.length ? `<div class="ep-list">${episodes.slice().reverse().map((e,i)=>{
+      const epId = getEpisodeId(e);
+      const num = firstOf(e,["episode","number"]) || (episodes.length - i);
+      const epTitle = firstOf(e,["title","episode"]) || `Episode ${num}`;
+      return `<a class="ep-row" href="#/watch/${encodeURIComponent(epId)}" data-anime-title="${esc(title)}" data-anime-poster="${esc(poster)}">
+        <span class="num">${esc(num)}</span><span class="ttl">${esc(epTitle)}</span><span class="meta">Tonton →</span>
+      </a>`;
+    }).join("")}</div>` : emptyBlock("Daftar episode belum tersedia.");
+    html += `</div>`;
+    html += debugPanel("anime/"+animeId, res);
+    app.innerHTML = html;
+
+    document.getElementById("favBtn").addEventListener("click", ()=>{
+      toggleFav({id:animeId, title, poster});
+      const b = document.getElementById("favBtn");
+      const now = isFav(animeId);
+      b.textContent = now ? "♥ Di favorit" : "♡ Tambah favorit";
+      toast(now ? "Ditambahkan ke favorit." : "Dihapus dari favorit.");
+    });
+    const st = document.getElementById("synopsisText"), sg = document.getElementById("synopsisToggle");
+    sg.addEventListener("click", ()=>{
+      const collapsed = st.getAttribute("data-collapsed") === "true";
+      st.setAttribute("data-collapsed", collapsed? "false":"true");
+      sg.textContent = collapsed ? "Sembunyikan" : "Baca selengkapnya";
+    });
+  }catch(e){ app.innerHTML = errorBlock("Tidak bisa mengambil detail anime.", e); }
+}
+
+async function pageWatch(app, episodeId){
+  app.innerHTML = `<div class="watch-layout"><div><div class="skel" style="aspect-ratio:16/9"></div></div><div class="side-block"><div class="skel skel-line"></div></div></div>`;
+  try{
+    const res = await api(`/episode/${encodeURIComponent(episodeId)}`);
+    const data = res.data || {};
+    const title = firstOf(data,["title","episode"]) || "Episode";
+    const animeTitle = firstOf(data,["animeTitle"]) || (isPlainObj(data.anime) ? getTitle(data.anime) : "");
+    const poster = getPoster(data) || (isPlainObj(data.anime) ? getPoster(data.anime) : "");
+    const animeId = firstOf(data,["animeId"]) || (isPlainObj(data.anime) ? getId(data.anime) : "");
+    const servers = collectServers(data);
+    const downloads = collectDownloads(data);
+    const directUrl = findDirectStreamUrl(data);
+    const prevId = findAdjacentEpisode(data,"prev");
+    const nextId = findAdjacentEpisode(data,"next");
+
+    let html = `<div class="watch-layout">
+      <div>
+        <div class="player-shell" id="playerShell">
+          ${directUrl? `<iframe src="${esc(directUrl)}" allowfullscreen></iframe>` : `<div class="player-empty">Pilih server di bawah untuk memulai pemutaran.</div>`}
+        </div>
+        <h1 class="watch-title">${esc(title)}</h1>
+        <div class="watch-sub">${animeId? `<a href="#/anime/${encodeURIComponent(animeId)}" style="color:var(--accent)">${esc(animeTitle||'Kembali ke detail anime')}</a>` : esc(animeTitle)}</div>
+        <div class="ep-nav">
+          <a class="btn btn-ghost btn-sm" ${prevId? `href="#/watch/${encodeURIComponent(prevId)}"`:"disabled"}>← Episode sebelumnya</a>
+          <a class="btn btn-ghost btn-sm" ${nextId? `href="#/watch/${encodeURIComponent(nextId)}"`:"disabled"}>Episode selanjutnya →</a>
+        </div>
+        ${servers.length? `<div class="server-group"><h4>Pilih server</h4><div class="server-pills" id="serverPills">
+          ${servers.map((s,i)=>`<button class="btn btn-ghost btn-sm server-btn ${i===0?'active':''}" data-server="${esc(s.id)}">${esc(s.name)}${s.quality? ' · '+esc(s.quality):''}</button>`).join("")}
+        </div></div>` : ""}
+        ${Object.keys(downloads).length? `<div class="side-block"><h3>Unduh episode ini</h3>
+          ${Object.keys(downloads).map(res=>`<div class="dl-row"><span class="muted">${esc(res)}</span><span class="dl-links">${downloads[res].map(d=>`<a href="${esc(d.url)}" target="_blank" rel="noopener">${esc(d.provider)}</a>`).join("")}</span></div>`).join("")}
+        </div>`:""}
+      </div>
+      <div>
+        <div class="side-block">
+          <h3>Tentang tayangan ini</h3>
+          <p class="muted" style="font-size:13px">Video disajikan melalui iframe dari server pilihan pengguna. Jika satu server gagal dimuat, coba server lain di atas.</p>
+        </div>
+      </div>
+    </div>`;
+    html += debugPanel("episode/"+episodeId, res);
+    app.innerHTML = html;
+
+    pushHistory({episodeId, title, animeTitle, poster, animeId, watchedAt: Date.now()});
+
+    async function loadServer(serverId){
+      const shell = document.getElementById("playerShell");
+      shell.innerHTML = `<div class="player-empty">Memuat server…</div>`;
+      try{
+        const sres = await api(`/server/${encodeURIComponent(serverId)}`);
+        const url = findDirectStreamUrl(sres.data) || firstOf(sres.data,["url","link"]);
+        if(!url){ shell.innerHTML = `<div class="player-empty">Server ini tidak mengembalikan tautan video. Coba server lain.</div>`; return; }
+        if(/\.m3u8($|\?)/i.test(url) && window.Hls && Hls.isSupported()){
+          shell.innerHTML = `<video id="hlsVideo" controls playsinline></video>`;
+          const video = document.getElementById("hlsVideo");
+          const hls = new Hls();
+          hls.loadSource(url); hls.attachMedia(video);
+        } else if(/\.(mp4|webm)($|\?)/i.test(url)){
+          shell.innerHTML = `<video controls playsinline src="${esc(url)}"></video>`;
+        } else {
+          shell.innerHTML = `<iframe src="${esc(url)}" allowfullscreen></iframe>`;
+        }
+      }catch(e){ shell.innerHTML = `<div class="player-empty">Gagal memuat server ini. Coba server lain.</div>`; }
+    }
+    const pills = document.getElementById("serverPills");
+    if(pills){
+      pills.addEventListener("click", (ev)=>{
+        const btn = ev.target.closest(".server-btn");
+        if(!btn) return;
+        pills.querySelectorAll(".server-btn").forEach(b=>b.classList.remove("active"));
+        btn.classList.add("active");
+        loadServer(btn.dataset.server);
+      });
+      if(!directUrl) loadServer(servers[0].id);
+    }
+  }catch(e){ app.innerHTML = errorBlock("Tidak bisa mengambil data episode.", e); }
+}
+
+/* ---------- global UI wiring ---------- */
+document.getElementById("searchForm").addEventListener("submit", (ev)=>{
+  ev.preventDefault();
+  const q = document.getElementById("searchInput").value.trim();
+  if(q) location.hash = "#/cari?q=" + encodeURIComponent(q);
+});
+document.getElementById("burgerBtn").addEventListener("click", ()=>{
+  document.getElementById("mainNav").classList.toggle("open");
+});
+
+render();
+})();
+</script>
+</body>
+</html>
